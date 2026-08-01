@@ -18,263 +18,146 @@
 <body class="bg-gray-50 text-gray-800">
 
     <!-- الهيدر الرئيسي -->
-    <header class="bg-gradient-to-r from-indigo-700 to-indigo-600 text-white shadow-lg sticky top-0 z-40">
-        <div class="container mx-auto px-4 py-3.5 flex justify-between items-center">
+    <header class="bg-indigo-600 text-white shadow-md sticky top-0 z-40">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <h1 class="text-2xl font-black tracking-wider flex items-center gap-2">
-                    <span>🛒</span> Marketplace
-                </h1>
-                <span class="text-xs bg-indigo-800/80 px-3 py-1 rounded-full text-indigo-100 font-bold border border-indigo-500/30">Youssef Store</span>
+                <h1 class="text-xl font-black">🛒 Marketplace</h1>
+                <span class="text-xs bg-indigo-700 px-2.5 py-1 rounded-full font-bold">Youssef Store</span>
             </div>
             
-            <div class="flex items-center gap-3">
-                <button onclick="openCartModal()" class="relative bg-indigo-800/60 hover:bg-indigo-800 px-3.5 py-2 rounded-xl text-sm font-bold transition flex items-center gap-2 border border-indigo-500/30">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span>السلة</span>
-                    <span id="cart-badge" class="absolute -top-2 -right-2 bg-rose-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold shadow-md">0</span>
-                </button>
+            <div class="flex items-center gap-2">
+                <!-- أزرار التنقل السريع للوحات التحكم (تظهر حسب دور المستخدم) -->
+                <div id="role-nav-buttons" class="hidden flex gap-2"></div>
+
                 <div id="nav-auth" class="flex gap-2 items-center">
-                    <button onclick="showModal('login-modal')" class="bg-indigo-800/60 hover:bg-indigo-800 px-4 py-2 rounded-xl text-sm font-bold transition border border-indigo-500/30">تسجيل الدخول</button>
-                    <button onclick="showModal('register-modal')" class="bg-white text-indigo-700 px-4 py-2 rounded-xl text-sm font-bold hover:bg-gray-100 transition shadow-sm">حساب جديد</button>
+                    <button onclick="showModal('login-modal')" class="bg-indigo-700 hover:bg-indigo-800 px-3.5 py-1.5 rounded-xl text-xs font-bold transition">دخول</button>
+                    <button onclick="showModal('register-modal')" class="bg-white text-indigo-600 hover:bg-gray-100 px-3.5 py-1.5 rounded-xl text-xs font-bold transition shadow-sm">حساب جديد</button>
                 </div>
             </div>
         </div>
     </header>
 
     <!-- المحتوى الرئيسي -->
-    <main class="container mx-auto px-4 py-8 space-y-8">
+    <main class="container mx-auto px-4 py-6 space-y-6">
         <!-- تنبيهات النظام -->
-        <div id="alert-box" class="hidden p-4 rounded-2xl text-white text-center shadow-lg transition-all duration-300 font-bold text-sm"></div>
+        <div id="alert-box" class="hidden p-3 rounded-xl text-white text-center shadow font-bold text-xs"></div>
 
-        <!-- أزرار التبديل السريع للوحات التحكم (تظهر فقط لصاحب الصلاحية) -->
-        <div id="dashboard-switcher" class="hidden flex gap-3 overflow-x-auto pb-2">
-            <button onclick="switchTab('customer')" id="tab-btn-customer" class="tab-btn px-5 py-2.5 rounded-xl font-bold text-sm bg-indigo-600 text-white shadow-md flex items-center gap-2 transition">
-                <i class="fas fa-store"></i> المتجر والمنتجات
-            </button>
-            <button onclick="switchTab('merchant')" id="tab-btn-merchant" class="tab-btn hidden px-5 py-2.5 rounded-xl font-bold text-sm bg-white text-gray-700 hover:bg-gray-100 shadow-sm flex items-center gap-2 transition border border-gray-200">
-                <i class="fas fa-chart-line"></i> لوحة تحكم التاجر
-            </button>
-            <button onclick="switchTab('admin')" id="tab-btn-admin" class="tab-btn hidden px-5 py-2.5 rounded-xl font-bold text-sm bg-white text-gray-700 hover:bg-gray-100 shadow-sm flex items-center gap-2 transition border border-gray-200">
-                <i class="fas fa-shield-alt"></i> لوحة تحكم الأدمن
-            </button>
-        </div>
-
-        <!-- 1. قسم العميل والمتجر -->
-        <section id="customer-section" class="space-y-6">
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 justify-between items-center">
-                <div class="w-full md:w-1/3 relative">
-                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="🔍 ابحث عن المنتجات..." class="w-full p-3.5 pr-11 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium">
-                </div>
-                <div class="flex gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0" id="categories-filter">
-                    <button onclick="filterCategory('all')" class="category-btn px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-bold whitespace-nowrap shadow-sm transition">الكل</button>
-                    <button onclick="filterCategory('موبايلات')" class="category-btn px-4 py-2.5 bg-gray-100 text-gray-600 rounded-xl text-xs font-bold whitespace-nowrap hover:bg-gray-200 transition">موبايلات</button>
-                    <button onclick="filterCategory('لابتوبات')" class="category-btn px-4 py-2.5 bg-gray-100 text-gray-600 rounded-xl text-xs font-bold whitespace-nowrap hover:bg-gray-200 transition">لابتوبات</button>
-                    <button onclick="filterCategory('إلكترونيات')" class="category-btn px-4 py-2.5 bg-gray-100 text-gray-600 rounded-xl text-xs font-bold whitespace-nowrap hover:bg-gray-200 transition">إلكترونيات</button>
-                    <button onclick="filterCategory('ملابس')" class="category-btn px-4 py-2.5 bg-gray-100 text-gray-600 rounded-xl text-xs font-bold whitespace-nowrap hover:bg-gray-200 transition">ملابس</button>
-                </div>
-            </div>
-
-            <div>
-                <h2 class="text-xl font-black mb-6 text-gray-800 flex items-center gap-2">
-                    <span class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm">🛍️</span> 
-                    المنتجات المعروضة للعملاء
-                </h2>
-                <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    <div class="col-span-full text-center py-16 text-gray-400">
-                        <i class="fas fa-spinner fa-spin text-3xl mb-3 text-indigo-600"></i>
-                        <p class="font-bold text-sm">جاري تحميل المنتجات...</p>
-                    </div>
+        <!-- 1. قسم العميل (الافتراضي) -->
+        <section id="customer-section" class="space-y-4">
+            <h2 class="text-lg font-black text-gray-800 flex items-center gap-2">
+                <span>🛍️</span> المنتجات المتاحة للعملاء
+            </h2>
+            <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div class="col-span-full text-center py-12 text-gray-400">
+                    <i class="fas fa-spinner fa-spin text-2xl mb-2 text-indigo-600"></i>
+                    <p class="font-bold text-xs">جاري تحميل المنتجات...</p>
                 </div>
             </div>
         </section>
 
         <!-- 2. لوحة تحكم التاجر -->
-        <section id="merchant-section" class="hidden space-y-6">
-            <div class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 space-y-8">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-100 pb-6">
-                    <div>
-                        <h2 class="text-2xl font-black text-indigo-600 flex items-center gap-3">
-                            <i class="fas fa-store p-3 bg-indigo-50 rounded-2xl"></i> لوحة تحكم التاجر
-                        </h2>
-                        <p class="text-sm text-gray-500 mt-1 font-medium">أضف منتجاتك وتابع أرباحك وحركة مبيعاتك في السوق.</p>
-                    </div>
-                    <span id="merchant-store-name" class="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-xl font-bold text-sm border border-indigo-100">متجر التاجر</span>
+        <section id="merchant-section" class="hidden space-y-6 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <div class="flex justify-between items-center border-b pb-4">
+                <div>
+                    <h2 class="text-xl font-black text-indigo-600 flex items-center gap-2">
+                        <i class="fas fa-store"></i> لوحة تحكم التاجر
+                    </h2>
+                    <p class="text-xs text-gray-500 mt-1">أضف منتجاتك الجديدة لتخضع لمراجعة الأدمن قبل ظهورها للعملاء.</p>
                 </div>
+                <button onclick="switchToCustomer()" class="bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-xl text-xs font-bold transition">العودة للمتجر</button>
+            </div>
 
-                <!-- إحصائيات التاجر -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                    <div class="bg-gradient-to-br from-indigo-50 to-indigo-100/50 p-5 rounded-2xl border border-indigo-100">
-                        <p class="text-xs text-indigo-500 font-bold mb-1 uppercase tracking-wider">إجمالي منتجاتك</p>
-                        <h3 id="merchant-prod-count" class="text-3xl font-black text-indigo-700">0</h3>
-                    </div>
-                    <div class="bg-gradient-to-br from-emerald-50 to-emerald-100/50 p-5 rounded-2xl border border-emerald-100">
-                        <p class="text-xs text-emerald-600 font-bold mb-1 uppercase tracking-wider">الأرباح المتوقعة</p>
-                        <h3 id="merchant-earnings" class="text-3xl font-black text-emerald-700">0 جنيه</h3>
-                    </div>
-                    <div class="bg-gradient-to-br from-amber-50 to-amber-100/50 p-5 rounded-2xl border border-amber-100">
-                        <p class="text-xs text-amber-600 font-bold mb-1 uppercase tracking-wider">الطلبات الواردة</p>
-                        <h3 id="merchant-orders-count" class="text-3xl font-black text-amber-700">0</h3>
-                    </div>
+            <div class="p-4 border rounded-xl bg-gray-50/50 space-y-3">
+                <h3 class="font-black text-sm text-gray-800">➕ إضافة منتج جديد</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <input type="text" id="p-title" placeholder="اسم المنتج" class="p-3 border rounded-xl bg-white text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    <input type="number" id="p-price" placeholder="السعر (جنيه)" class="p-3 border rounded-xl bg-white text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    <input type="text" id="p-category" placeholder="التصنيف (موبايلات، لابتوبات..)" class="p-3 border rounded-xl bg-white text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    <input type="text" id="p-image" placeholder="رابط صورة المنتج (URL)" class="p-3 border rounded-xl bg-white text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                 </div>
+                <button onclick="addMerchantProduct()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-bold text-xs transition shadow-sm">إرسال المنتج للأدمن</button>
+            </div>
 
-                <!-- نموذج إضافة منتج -->
-                <div class="p-6 border border-gray-200/80 rounded-2xl bg-gray-50/50 space-y-4">
-                    <h3 class="font-black text-lg text-gray-800 flex items-center gap-2">
-                        <i class="fas fa-plus-circle text-indigo-600"></i> إضافة منتج جديد (يخضع لمراجعة الأدمن)
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-600 mb-1">اسم المنتج</label>
-                            <input type="text" id="p-title" placeholder="مثال: آيفون 13 برو ماكس" class="w-full p-3.5 border border-gray-200 rounded-xl bg-white text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none font-medium">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-600 mb-1">السعر (بالجنيه)</label>
-                            <input type="number" id="p-price" placeholder="مثال: 25000" class="w-full p-3.5 border border-gray-200 rounded-xl bg-white text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none font-medium">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-600 mb-1">التصنيف</label>
-                            <input type="text" id="p-category" placeholder="مثال: موبايلات" class="w-full p-3.5 border border-gray-200 rounded-xl bg-white text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none font-medium">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-600 mb-1">رابط الصورة (URL)</label>
-                            <input type="text" id="p-image" placeholder="https://example.com/image.jpg" class="w-full p-3.5 border border-gray-200 rounded-xl bg-white text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none font-medium">
-                        </div>
-                    </div>
-                    <button onclick="addMerchantProduct()" class="w-full md:w-auto bg-indigo-600 text-white px-8 py-3.5 rounded-xl font-bold text-sm hover:bg-indigo-700 transition shadow-md shadow-indigo-600/20">إرسال المنتج للأدمن للاعتماد</button>
-                </div>
-
-                <!-- منتجات التاجر الخاصة به -->
-                <div class="space-y-4">
-                    <h3 class="font-black text-lg text-gray-800">منتجاتك المسجلة:</h3>
-                    <div id="merchant-products-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <p class="text-gray-400 text-sm py-4">جاري تحميل منتجاتك...</p>
-                    </div>
+            <div>
+                <h3 class="font-black text-sm text-gray-800 mb-3">منتجاتك المسجلة:</h3>
+                <div id="merchant-products-list" class="space-y-2">
+                    <p class="text-gray-400 text-xs">جاري التحميل...</p>
                 </div>
             </div>
         </section>
 
         <!-- 3. لوحة تحكم الأدمن -->
-        <section id="admin-section" class="hidden space-y-6">
-            <div class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 space-y-8">
-                <div class="border-b border-gray-100 pb-6">
-                    <h2 class="text-2xl font-black text-rose-600 flex items-center gap-3">
-                        <i class="fas fa-shield-alt p-3 bg-rose-50 rounded-2xl"></i> لوحة تحكم الأدمن والمدير العام
+        <section id="admin-section" class="hidden space-y-6 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <div class="flex justify-between items-center border-b pb-4">
+                <div>
+                    <h2 class="text-xl font-black text-rose-600 flex items-center gap-2">
+                        <i class="fas fa-shield-alt"></i> لوحة تحكم الأدمن (مراجعة المنتجات)
                     </h2>
-                    <p class="text-sm text-gray-500 mt-1 font-medium">مراجعة واعتماد المنتجات الجديدة المضافة من التجار.</p>
+                    <p class="text-xs text-gray-500 mt-1">وافق على المنتجات لنشرها أو ارفضها.</p>
                 </div>
+                <button onclick="switchToCustomer()" class="bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-xl text-xs font-bold transition">العودة للمتجر</button>
+            </div>
 
-                <div class="space-y-4">
-                    <h3 class="font-black text-lg text-gray-800 flex items-center gap-2">
-                        <span>⏳</span> المنتجات المعلقة بانتظار الاعتماد والنشر:
-                    </h3>
-                    <div id="pending-products-list" class="space-y-3">
-                        <p class="text-gray-400 text-sm py-8 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">لا توجد منتجات معلقة للمراجعة حالياً.</p>
-                    </div>
+            <div class="space-y-3">
+                <h3 class="font-black text-sm text-gray-800">المنتجات المعلقة بانتظار موافقتك:</h3>
+                <div id="pending-products-list" class="space-y-3">
+                    <p class="text-gray-400 text-xs text-center py-6">لا توجد منتجات معلقة للمراجعة حالياً.</p>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- مودال السلة -->
-    <div id="cart-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex justify-center items-center z-50 p-4">
-        <div class="bg-white p-6 rounded-3xl w-full max-w-lg shadow-2xl border border-gray-100 space-y-6">
-            <div class="flex justify-between items-center border-b border-gray-100 pb-4">
-                <h3 class="text-xl font-black text-gray-800 flex items-center gap-2">🛒 سلة المشتريات</h3>
-                <button onclick="hideModal('cart-modal')" class="text-gray-400 hover:text-gray-600 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold"><i class="fas fa-times"></i></button>
-            </div>
-            <div id="cart-items-container" class="space-y-3 max-h-60 overflow-y-auto">
-                <p class="text-gray-400 text-sm text-center py-6">السلة فارغة حالياً</p>
-            </div>
-            <div class="border-t border-gray-100 pt-4 flex justify-between items-center font-black text-lg">
-                <span>الإجمالي الكلي:</span>
-                <span id="cart-total-price" class="text-indigo-600">0 جنيه</span>
-            </div>
-            <button onclick="checkoutOrder()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-2xl font-black text-sm transition shadow-lg shadow-emerald-600/20">تأكيد وإتمام الطلب</button>
-        </div>
-    </div>
-
     <!-- مودال تسجيل الدخول -->
-    <div id="login-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex justify-center items-center z-50 p-4">
-        <div class="bg-white p-6 md:p-8 rounded-3xl w-full max-w-md shadow-2xl border border-gray-100 space-y-6">
-            <div class="flex justify-between items-center border-b border-gray-100 pb-4">
-                <h3 class="text-xl font-black text-gray-800">تسجيل الدخول</h3>
-                <button onclick="hideModal('login-modal')" class="text-gray-400 hover:text-gray-600 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold"><i class="fas fa-times"></i></button>
+    <div id="login-modal" class="fixed inset-0 bg-black/50 hidden flex justify-center items-center z-50 p-4">
+        <div class="bg-white p-6 rounded-2xl w-full max-w-sm shadow-xl space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="font-black text-base">تسجيل الدخول</h3>
+                <button onclick="hideModal('login-modal')" class="text-gray-400"><i class="fas fa-times"></i></button>
             </div>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">البريد الإلكتروني</label>
-                    <input type="email" id="login-email" placeholder="name@example.com" class="w-full p-3.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none font-medium">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">كلمة المرور</label>
-                    <input type="password" id="login-password" placeholder="••••••••" class="w-full p-3.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none font-medium">
-                </div>
-                <div class="flex justify-end gap-3 pt-2">
-                    <button onclick="hideModal('login-modal')" class="px-5 py-2.5 rounded-xl text-sm font-bold text-gray-500 hover:bg-gray-100 transition">إلغاء</button>
-                    <button onclick="loginUser()" class="bg-indigo-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-indigo-700 transition shadow-md shadow-indigo-600/20">دخول</button>
-                </div>
+            <input type="email" id="login-email" placeholder="البريد الإلكتروني" class="w-full p-3 border rounded-xl text-xs font-medium focus:outline-none">
+            <input type="password" id="login-password" placeholder="كلمة المرور" class="w-full p-3 border rounded-xl text-xs font-medium focus:outline-none">
+            <div class="flex justify-end gap-2">
+                <button onclick="hideModal('login-modal')" class="px-3 py-2 text-xs text-gray-500">إلغاء</button>
+                <button onclick="loginUser()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold">دخول</button>
             </div>
         </div>
     </div>
 
     <!-- مودال إنشاء حساب -->
-    <div id="register-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex justify-center items-center z-50 p-4">
-        <div class="bg-white p-6 md:p-8 rounded-3xl w-full max-w-md shadow-2xl border border-gray-100 space-y-6">
-            <div class="flex justify-between items-center border-b border-gray-100 pb-4">
-                <h3 class="text-xl font-black text-gray-800">إنشاء حساب جديد</h3>
-                <button onclick="hideModal('register-modal')" class="text-gray-400 hover:text-gray-600 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold"><i class="fas fa-times"></i></button>
+    <div id="register-modal" class="fixed inset-0 bg-black/50 hidden flex justify-center items-center z-50 p-4">
+        <div class="bg-white p-6 rounded-2xl w-full max-w-sm shadow-xl space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="font-black text-base">إنشاء حساب جديد</h3>
+                <button onclick="hideModal('register-modal')" class="text-gray-400"><i class="fas fa-times"></i></button>
             </div>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">الاسم الكامل / اسم المتجر</label>
-                    <input type="text" id="reg-name" placeholder="اسمك أو اسم محلك" class="w-full p-3.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none font-medium">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">البريد الإلكتروني</label>
-                    <input type="email" id="reg-email" placeholder="name@example.com" class="w-full p-3.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none font-medium">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">كلمة المرور</label>
-                    <input type="password" id="reg-password" placeholder="••••••••" class="w-full p-3.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none font-medium">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">نوع الحساب (الصلاحية)</label>
-                    <select id="reg-role" class="w-full p-3.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white font-bold">
-                        <option value="customer">عميل (مشتري)</option>
-                        <option value="merchant">تاجر (بائع)</option>
-                        <option value="admin">أدمن (مدير عام)</option>
-                    </select>
-                </div>
-                <div class="flex justify-end gap-3 pt-2">
-                    <button onclick="hideModal('register-modal')" class="px-5 py-2.5 rounded-xl text-sm font-bold text-gray-500 hover:bg-gray-100 transition">إلغاء</button>
-                    <button onclick="registerUser()" class="bg-indigo-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-indigo-700 transition shadow-md shadow-indigo-600/20">تسجيل الحساب</button>
-                </div>
+            <input type="text" id="reg-name" placeholder="الاسم / اسم المتجر" class="w-full p-3 border rounded-xl text-xs font-medium focus:outline-none">
+            <input type="email" id="reg-email" placeholder="البريد الإلكتروني" class="w-full p-3 border rounded-xl text-xs font-medium focus:outline-none">
+            <input type="password" id="reg-password" placeholder="كلمة المرور" class="w-full p-3 border rounded-xl text-xs font-medium focus:outline-none">
+            <select id="reg-role" class="w-full p-3 border rounded-xl text-xs font-bold bg-white">
+                <option value="customer">عميل (مشتري)</option>
+                <option value="merchant">تاجر (بائع)</option>
+                <option value="admin">أدمن (مدير المنصة)</option>
+            </select>
+            <div class="flex justify-end gap-2">
+                <button onclick="hideModal('register-modal')" class="px-3 py-2 text-xs text-gray-500">إلغاء</button>
+                <button onclick="registerUser()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold">تسجيل</button>
             </div>
         </div>
     </div>
 
-    <!-- كود الجافاسكريبت والربط بقاعدة البيانات -->
+    <!-- كود الجافاسكريبت -->
     <script>
         const SUPABASE_URL = 'https://miqqwdxfqklkweqlvffg.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_gd_SrlvmZSTi-96gH7MzIg_4iE9CzTx';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let currentUser = JSON.parse(localStorage.getItem('marketplace_user')) || null;
-        let allProducts = [];
-        let cart = JSON.parse(localStorage.getItem('marketplace_cart')) || [];
-        let currentCategory = 'all';
 
         window.onload = function() {
             checkAuthUI();
             loadProducts();
-            updateCartBadge();
-            if(currentUser) {
-                if(currentUser.role === 'admin') loadPendingProducts();
-                if(currentUser.role === 'merchant') {
-                    loadMerchantProducts();
-                    loadMerchantStats();
-                }
-            }
+            if(currentUser && currentUser.role === 'admin') loadPendingProducts();
+            if(currentUser && currentUser.role === 'merchant') loadMerchantProducts();
         };
 
         function showModal(id) { document.getElementById(id).classList.remove('hidden'); }
@@ -283,30 +166,9 @@
         function showAlert(msg, type = 'success') {
             const box = document.getElementById('alert-box');
             box.innerText = msg;
-            box.className = `p-4 rounded-2xl text-white text-center shadow-lg transition-all duration-300 font-bold text-sm ${type === 'success' ? 'bg-emerald-600' : 'bg-rose-600'}`;
+            box.className = `p-3 rounded-xl text-white text-center shadow font-bold text-xs ${type === 'success' ? 'bg-emerald-600' : 'bg-rose-600'}`;
             box.classList.remove('hidden');
             setTimeout(() => box.classList.add('hidden'), 4000);
-        }
-
-        function switchTab(tab) {
-            document.getElementById('customer-section').classList.add('hidden');
-            document.getElementById('merchant-section').classList.add('hidden');
-            document.getElementById('admin-section').classList.add('hidden');
-
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.className = "tab-btn px-5 py-2.5 rounded-xl font-bold text-sm bg-white text-gray-700 hover:bg-gray-100 shadow-sm flex items-center gap-2 transition border border-gray-200";
-            });
-
-            if(tab === 'customer') {
-                document.getElementById('customer-section').classList.remove('hidden');
-                document.getElementById('tab-btn-customer').className = "tab-btn px-5 py-2.5 rounded-xl font-bold text-sm bg-indigo-600 text-white shadow-md flex items-center gap-2 transition";
-            } else if(tab === 'merchant') {
-                document.getElementById('merchant-section').classList.remove('hidden');
-                document.getElementById('tab-btn-merchant').className = "tab-btn px-5 py-2.5 rounded-xl font-bold text-sm bg-indigo-600 text-white shadow-md flex items-center gap-2 transition";
-            } else if(tab === 'admin') {
-                document.getElementById('admin-section').classList.remove('hidden');
-                document.getElementById('tab-btn-admin').className = "tab-btn px-5 py-2.5 rounded-xl font-bold text-sm bg-rose-600 text-white shadow-md flex items-center gap-2 transition";
-            }
         }
 
         async function registerUser() {
@@ -316,15 +178,15 @@
             const role = document.getElementById('reg-role').value;
 
             if(!name || !email || !password) {
-                showAlert('برجاء ملء جميع الحقول المطلوبة', 'error');
+                showAlert('برجاء ملء جميع الحقول', 'error');
                 return;
             }
 
             const { error } = await supabase.from('users').insert([{ name, email, password, role }]);
             if (error) {
-                showAlert('خطأ في التسجيل: ' + error.message, 'error');
+                showAlert('خطأ: ' + error.message, 'error');
             } else {
-                showAlert('تم إنشاء الحساب بنجاح! يمكنك تسجيل الدخول الآن.');
+                showAlert('تم إنشاء الحساب بنجاح! سجل دخولك الآن.');
                 hideModal('register-modal');
             }
         }
@@ -335,7 +197,7 @@
 
             const { data, error } = await supabase.from('users').select('*').eq('email', email).eq('password', password).single();
             if (error || !data) {
-                showAlert('البريد الإلكتروني أو كلمة المرور غير صحيحة', 'error');
+                showAlert('البريد أو كلمة المرور غير صحيحة', 'error');
             } else {
                 currentUser = data;
                 localStorage.setItem('marketplace_user', JSON.stringify(currentUser));
@@ -352,25 +214,42 @@
 
         function checkAuthUI() {
             const navAuth = document.getElementById('nav-auth');
-            const switcher = document.getElementById('dashboard-switcher');
-            
+            const roleNav = document.getElementById('role-nav-buttons');
+
             if (currentUser) {
                 navAuth.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <span class="text-xs font-bold text-indigo-100 hidden sm:inline">أهلاً، ${currentUser.name} (${currentUser.role === 'admin' ? 'أدمن' : currentUser.role === 'merchant' ? 'تاجر' : 'عميل'})</span>
-                        <button onclick="logout()" class="bg-rose-500/80 hover:bg-rose-600 px-3.5 py-2 rounded-xl text-xs font-bold transition shadow-sm">خروج</button>
-                    </div>
+                    <span class="text-xs font-bold text-indigo-100 hidden sm:inline">${currentUser.name}</span>
+                    <button onclick="logout()" class="bg-rose-500 hover:bg-rose-600 px-3 py-1.5 rounded-xl text-xs font-bold transition">خروج</button>
                 `;
-                switcher.classList.remove('hidden');
 
+                roleNav.classList.remove('hidden');
                 if (currentUser.role === 'merchant') {
-                    document.getElementById('tab-btn-merchant').classList.remove('hidden');
-                    document.getElementById('merchant-store-name').innerText = currentUser.name;
-                }
-                if (currentUser.role === 'admin') {
-                    document.getElementById('tab-btn-admin').classList.remove('hidden');
+                    roleNav.innerHTML = `<button onclick="showMerchantDashboard()" class="bg-indigo-800 hover:bg-indigo-900 px-3 py-1.5 rounded-xl text-xs font-bold transition border border-indigo-400/30">لوحة التاجر</button>`;
+                } else if (currentUser.role === 'admin') {
+                    roleNav.innerHTML = `<button onclick="showAdminDashboard()" class="bg-rose-700 hover:bg-rose-800 px-3 py-1.5 rounded-xl text-xs font-bold transition border border-rose-400/30">لوحة الأدمن</button>`;
                 }
             }
+        }
+
+        function showMerchantDashboard() {
+            document.getElementById('customer-section').classList.add('hidden');
+            document.getElementById('admin-section').classList.add('hidden');
+            document.getElementById('merchant-section').classList.remove('hidden');
+            loadMerchantProducts();
+        }
+
+        function showAdminDashboard() {
+            document.getElementById('customer-section').classList.add('hidden');
+            document.getElementById('merchant-section').classList.add('hidden');
+            document.getElementById('admin-section').classList.remove('hidden');
+            loadPendingProducts();
+        }
+
+        function switchToCustomer() {
+            document.getElementById('merchant-section').classList.add('hidden');
+            document.getElementById('admin-section').classList.add('hidden');
+            document.getElementById('customer-section').classList.remove('hidden');
+            loadProducts();
         }
 
         async function loadProducts() {
@@ -378,108 +257,20 @@
             const { data, error } = await supabase.from('products').select('*').eq('status', 'approved').eq('is_hidden', false);
             
             if (error || !data || data.length === 0) {
-                grid.innerHTML = '<p class="text-gray-400 col-span-full text-center py-16 font-bold text-sm">لا توجد منتجات متاحة حالياً.</p>';
+                grid.innerHTML = '<p class="text-gray-400 col-span-full text-center py-12 font-bold text-xs">لا توجد منتجات متاحة حالياً.</p>';
                 return;
             }
 
-            allProducts = data;
-            renderProducts(allProducts);
-        }
-
-        function renderProducts(products) {
-            const grid = document.getElementById('products-grid');
-            if (products.length === 0) {
-                grid.innerHTML = '<p class="text-gray-400 col-span-full text-center py-16 font-bold text-sm">لا توجد منتجات مطابقة لبحثك.</p>';
-                return;
-            }
-
-            grid.innerHTML = products.map(p => `
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition">
+            grid.innerHTML = data.map(p => `
+                <div class="bg-white p-3 rounded-2xl shadow-sm border flex flex-col justify-between">
                     <div>
-                        <img src="${p.image_url || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500'}" class="w-full h-48 object-cover rounded-xl mb-3 bg-gray-50" onerror="this.src='https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500'">
-                        <span class="text-[10px] bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-lg font-bold inline-block mb-1.5">${p.category}</span>
-                        <h3 class="font-bold text-base text-gray-800 mb-1 line-clamp-1">${p.title}</h3>
-                        <p class="text-indigo-600 font-black text-lg mb-3">${p.price} جنيه</p>
+                        <img src="${p.image_url || 'https://via.placeholder.com/300'}" class="w-full h-36 object-cover rounded-xl mb-2 bg-gray-50" onerror="this.src='https://via.placeholder.com/300'">
+                        <span class="text-[9px] bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-md font-bold inline-block mb-1">${p.category}</span>
+                        <h3 class="font-bold text-sm text-gray-800 mb-1 line-clamp-1">${p.title}</h3>
+                        <p class="text-indigo-600 font-black text-base">${p.price} جنيه</p>
                     </div>
-                    <button onclick='addToCart(${JSON.stringify(p)})' class="w-full bg-indigo-50 hover:bg-indigo-600 text-indigo-600 hover:text-white py-2.5 rounded-xl font-bold text-xs transition flex items-center justify-center gap-2">
-                        <i class="fas fa-cart-plus"></i> أضف للسلة
-                    </button>
                 </div>
             `).join('');
-        }
-
-        function filterCategory(cat) {
-            currentCategory = cat;
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.className = "category-btn px-4 py-2.5 bg-gray-100 text-gray-600 rounded-xl text-xs font-bold whitespace-nowrap hover:bg-gray-200 transition";
-            });
-            event.target.className = "category-btn px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-bold whitespace-nowrap shadow-sm transition";
-            filterProducts();
-        }
-
-        function filterProducts() {
-            const query = document.getElementById('search-input').value.toLowerCase();
-            let filtered = allProducts.filter(p => p.title.toLowerCase().includes(query));
-            if (currentCategory !== 'all') {
-                filtered = filtered.filter(p => p.category === currentCategory);
-            }
-            renderProducts(filtered);
-        }
-
-        function addToCart(product) {
-            cart.push(product);
-            localStorage.setItem('marketplace_cart', JSON.stringify(cart));
-            updateCartBadge();
-            showAlert(`تمت إضافة "${product.title}" إلى السلة بنجاح!`);
-        }
-
-        function updateCartBadge() {
-            document.getElementById('cart-badge').innerText = cart.length;
-        }
-
-        function openCartModal() {
-            const container = document.getElementById('cart-items-container');
-            const totalEl = document.getElementById('cart-total-price');
-
-            if(cart.length === 0) {
-                container.innerHTML = '<p class="text-gray-400 text-sm text-center py-6 font-bold">السلة فارغة حالياً</p>';
-                totalEl.innerText = '0 جنيه';
-                showModal('cart-modal');
-                return;
-            }
-
-            let total = 0;
-            container.innerHTML = cart.map((item, index) => {
-                total += item.price;
-                return `
-                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-2xl border border-gray-100">
-                        <div>
-                            <h4 class="font-bold text-sm text-gray-800">${item.title}</h4>
-                            <p class="text-xs text-indigo-600 font-bold">${item.price} جنيه</p>
-                        </div>
-                        <button onclick="removeFromCart(${index})" class="text-rose-500 hover:text-rose-700 text-sm p-2"><i class="fas fa-trash-alt"></i></button>
-                    </div>
-                `;
-            }).join('');
-
-            totalEl.innerText = total + ' جنيه';
-            showModal('cart-modal');
-        }
-
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            localStorage.setItem('marketplace_cart', JSON.stringify(cart));
-            updateCartBadge();
-            openCartModal();
-        }
-
-        async function checkoutOrder() {
-            if(cart.length === 0) return;
-            showAlert('تم إتمام الطلب بنجاح وإرساله للتاجر! ✅');
-            cart = [];
-            localStorage.removeItem('marketplace_cart');
-            updateCartBadge();
-            hideModal('cart-modal');
         }
 
         async function addMerchantProduct() {
@@ -491,7 +282,7 @@
             const image_url = document.getElementById('p-image').value;
 
             if(!title || !price || !category) {
-                showAlert('برجاء ملء بيانات المنتج الأساسية (العنوان، السعر، والتصنيف)', 'error');
+                showAlert('برجاء ملء بيانات المنتج الأساسية', 'error');
                 return;
             }
 
@@ -502,15 +293,14 @@
             }]);
 
             if (error) {
-                showAlert('خطأ أثناء إضافة المنتج: ' + error.message, 'error');
+                showAlert('خطأ أثناء إضافة المنتج', 'error');
             } else {
-                showAlert('تم إرسال المنتج للأدمن للاعتماد بنجاح! 🚀');
+                showAlert('تم إرسال المنتج للأدمن بنجاح وفي انتظار موافقته! ✅');
                 document.getElementById('p-title').value = '';
                 document.getElementById('p-price').value = '';
                 document.getElementById('p-category').value = '';
                 document.getElementById('p-image').value = '';
                 loadMerchantProducts();
-                loadMerchantStats();
             }
         }
 
@@ -520,28 +310,20 @@
             const { data } = await supabase.from('products').select('*').eq('merchant_id', currentUser.id);
 
             if(!data || data.length === 0) {
-                list.innerHTML = '<p class="text-gray-400 text-sm py-4 col-span-full">لم تقم بإضافة أي منتجات حتى الآن.</p>';
+                list.innerHTML = '<p class="text-gray-400 text-xs">لم تقم بإضافة منتجات بعد.</p>';
                 return;
             }
 
             list.innerHTML = data.map(p => `
-                <div class="p-4 border border-gray-100 rounded-2xl bg-gray-50 flex justify-between items-center shadow-sm">
+                <div class="p-3 border rounded-xl bg-gray-50 flex justify-between items-center text-xs">
                     <div>
-                        <h4 class="font-bold text-sm text-gray-800">${p.title}</h4>
-                        <p class="text-xs text-gray-500 mt-0.5">${p.price} جنيه - <span class="font-bold ${p.status === 'approved' ? 'text-emerald-600' : 'text-amber-600'}">${p.status === 'approved' ? 'منشور ومعتمد' : 'بانتظار موافقة الأدمن'}</span></p>
+                        <span class="font-bold text-gray-800">${p.title}</span> - ${p.price} جنيه
                     </div>
+                    <span class="font-bold px-2 py-1 rounded ${p.status === 'approved' ? 'bg-emerald-100 text-emerald-700' : p.status === 'rejected' ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700'}">
+                        ${p.status === 'approved' ? 'تمت الموافقة ونشر' : p.status === 'rejected' ? 'مرفوض من الأدمن' : 'قيد المراجعة (في الانتظار)'}
+                    </span>
                 </div>
             `).join('');
-        }
-
-        async function loadMerchantStats() {
-            if(!currentUser) return;
-            const { data } = await supabase.from('products').select('*').eq('merchant_id', currentUser.id);
-            if(data) {
-                document.getElementById('merchant-prod-count').innerText = data.length;
-                const totalEarnings = data.reduce((sum, p) => sum + ((p.sales_count || 0) * p.price), 0);
-                document.getElementById('merchant-earnings').innerText = totalEarnings + ' جنيه';
-            }
         }
 
         async function loadPendingProducts() {
@@ -549,19 +331,19 @@
             const { data } = await supabase.from('products').select('*').eq('status', 'pending');
 
             if (!data || data.length === 0) {
-                list.innerHTML = '<p class="text-gray-400 text-sm py-8 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">لا توجد منتجات معلقة للمراجعة حالياً.</p>';
+                list.innerHTML = '<p class="text-gray-400 text-xs text-center py-6 bg-gray-50 rounded-xl">لا توجد منتجات معلقة للمراجعة حالياً.</p>';
                 return;
             }
 
             list.innerHTML = data.map(p => `
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 border border-gray-100 rounded-2xl bg-gray-50/60 shadow-sm gap-4">
+                <div class="flex justify-between items-center p-3 border rounded-xl bg-gray-50 text-xs">
                     <div>
-                        <h4 class="font-bold text-gray-800 text-sm">${p.title}</h4>
-                        <p class="text-xs text-gray-500 mt-1">السعر: <span class="font-bold text-indigo-600">${p.price} جنيه</span> | التصنيف: ${p.category}</p>
+                        <h4 class="font-bold text-gray-800">${p.title}</h4>
+                        <p class="text-gray-500">السعر: ${p.price} جنيه | التصنيف: ${p.category}</p>
                     </div>
-                    <div class="flex gap-2 w-full sm:w-auto">
-                        <button onclick="updateProductStatus('${p.id}', 'approved')" class="flex-1 sm:flex-none bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-emerald-700 transition shadow-sm">موافقة ونشر</button>
-                        <button onclick="updateProductStatus('${p.id}', 'rejected')" class="flex-1 sm:flex-none bg-rose-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-rose-700 transition shadow-sm">رفض</button>
+                    <div class="flex gap-2">
+                        <button onclick="updateProductStatus('${p.id}', 'approved')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg font-bold">موافقة ونشر</button>
+                        <button onclick="updateProductStatus('${p.id}', 'rejected')" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1.5 rounded-lg font-bold">رفض</button>
                     </div>
                 </div>
             `).join('');
@@ -570,9 +352,9 @@
         async function updateProductStatus(id, status) {
             const { error } = await supabase.from('products').update({ status }).eq('id', id);
             if (error) {
-                showAlert('حدث خطأ أثناء تحديث حالة المنتج', 'error');
+                showAlert('حدث خطأ', 'error');
             } else {
-                showAlert(`تم تحديث حالة المنتج بنجاح إلى: ${status}`);
+                showAlert(`تم تحديث حالة المنتج إلى: ${status === 'approved' ? 'موافق عليه' : 'مرفوض'}`);
                 loadPendingProducts();
                 loadProducts();
             }
