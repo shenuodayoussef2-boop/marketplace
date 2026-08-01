@@ -17,22 +17,23 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-    <!-- الهيدر -->
+    <!-- الهيدر الرئيسي -->
     <header class="bg-indigo-600 text-white shadow-md sticky top-0 z-40">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <h1 class="text-xl font-black">🛒 Marketplace</h1>
             <div id="nav-auth" class="flex gap-2 items-center">
-                <button onclick="showModal('login-modal')" class="bg-indigo-700 px-3 py-1.5 rounded-xl text-xs font-bold">دخول</button>
-                <button onclick="showModal('register-modal')" class="bg-white text-indigo-600 px-3 py-1.5 rounded-xl text-xs font-bold">حساب جديد</button>
+                <button onclick="showModal('login-modal')" class="bg-indigo-700 hover:bg-indigo-800 px-3 py-1.5 rounded-xl text-xs font-bold transition">دخول</button>
+                <button onclick="showModal('register-modal')" class="bg-white text-indigo-600 hover:bg-gray-100 px-3 py-1.5 rounded-xl text-xs font-bold transition">حساب جديد</button>
             </div>
         </div>
     </header>
 
-    <!-- المحتوى -->
+    <!-- المحتوى الرئيسي -->
     <main class="container mx-auto px-4 py-6 space-y-6">
+        <!-- صندوق التنبيهات -->
         <div id="alert-box" class="hidden p-3 rounded-xl text-white text-center shadow font-bold text-xs"></div>
 
-        <!-- قسم عرض المنتجات -->
+        <!-- قسم عرض المنتجات للعملاء -->
         <section id="customer-section" class="space-y-4">
             <h2 class="text-lg font-black text-gray-800">🛍️ المنتجات المتاحة</h2>
             <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -42,65 +43,74 @@
             </div>
         </section>
 
-        <!-- لوحة التحكم للتاجر والأدمن -->
-        <section id="dashboard-section" class="hidden space-y-6 bg-white p-6 rounded-2xl shadow-sm border">
+        <!-- لوحة التحكم المشتركة (للتاجر والأدمن) -->
+        <section id="dashboard-section" class="hidden space-y-6 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
             <div class="flex justify-between items-center border-b pb-4">
                 <h2 id="dash-title" class="text-xl font-black text-indigo-600">لوحة التحكم</h2>
-                <button onclick="location.reload()" class="bg-gray-100 px-3 py-1.5 rounded-xl text-xs font-bold">إغلاق</button>
+                <button onclick="location.reload()" class="bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-xl text-xs font-bold transition">إغلاق / العودة</button>
             </div>
 
-            <!-- نموذج إضافة منتج (للتاجر) -->
+            <!-- نموذج إضافة منتج جديد (يظهر للتاجر فقط) -->
             <div id="merchant-add-box" class="hidden p-4 border rounded-xl bg-gray-50 space-y-3">
-                <h3 class="font-black text-sm">➕ إضافة منتج جديد</h3>
+                <h3 class="font-black text-sm text-gray-800">➕ إضافة منتج جديد</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <input type="text" id="p-title" placeholder="اسم المنتج" class="p-3 border rounded-xl bg-white text-xs">
-                    <input type="number" id="p-price" placeholder="السعر" class="p-3 border rounded-xl bg-white text-xs">
-                    <input type="text" id="p-category" placeholder="التصنيف" class="p-3 border rounded-xl bg-white text-xs">
-                    <input type="text" id="p-image" placeholder="رابط الصورة (URL)" class="p-3 border rounded-xl bg-white text-xs">
+                    <input type="text" id="p-title" placeholder="اسم المنتج" class="p-3 border rounded-xl bg-white text-xs font-medium focus:outline-none">
+                    <input type="number" id="p-price" placeholder="السعر (جنيه)" class="p-3 border rounded-xl bg-white text-xs font-medium focus:outline-none">
+                    <input type="text" id="p-category" placeholder="التصنيف" class="p-3 border rounded-xl bg-white text-xs font-medium focus:outline-none">
+                    <input type="text" id="p-image" placeholder="رابط صورة المنتج (URL)" class="p-3 border rounded-xl bg-white text-xs font-medium focus:outline-none">
                 </div>
-                <button onclick="addProduct()" class="bg-indigo-600 text-white px-5 py-2 rounded-xl font-bold text-xs">نشر المنتج</button>
+                <button onclick="addProduct()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-bold text-xs transition">نشر المنتج</button>
             </div>
 
-            <!-- طلبات المنتجات للأدمن أو منتجات التاجر -->
-            <div>
-                <h3 id="list-title" class="font-black text-sm mb-3">القائمة</h3>
-                <div id="dashboard-list" class="space-y-2"></div>
+            <!-- قائمة العناصر داخل لوحة التحكم -->
+            <div class="space-y-3">
+                <h3 id="list-title" class="font-black text-sm text-gray-800">القائمة</h3>
+                <div id="dashboard-list" class="space-y-2">
+                    <p class="text-gray-400 text-xs">جاري التحميل...</p>
+                </div>
             </div>
         </section>
     </main>
 
-    <!-- مودال تسجيل الدخول -->
+    <!-- نافذة (مودال) تسجيل الدخول -->
     <div id="login-modal" class="fixed inset-0 bg-black/50 hidden flex justify-center items-center z-50 p-4">
-        <div class="bg-white p-6 rounded-2xl w-full max-w-sm space-y-4">
-            <h3 class="font-black text-base">تسجيل الدخول</h3>
-            <input type="email" id="login-email" placeholder="البريد الإلكتروني" class="w-full p-3 border rounded-xl text-xs">
-            <input type="password" id="login-password" placeholder="كلمة المرور" class="w-full p-3 border rounded-xl text-xs">
-            <div class="flex justify-end gap-2">
-                <button onclick="hideModal('login-modal')" class="px-3 py-2 text-xs text-gray-500">إلغاء</button>
-                <button onclick="loginUser()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold">دخول</button>
+        <div class="bg-white p-6 rounded-2xl w-full max-w-sm space-y-4 shadow-xl">
+            <div class="flex justify-between items-center">
+                <h3 class="font-black text-base">تسجيل الدخول</h3>
+                <button onclick="hideModal('login-modal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
+            </div>
+            <input type="email" id="login-email" placeholder="البريد الإلكتروني" class="w-full p-3 border rounded-xl text-xs font-medium focus:outline-none">
+            <input type="password" id="login-password" placeholder="كلمة المرور" class="w-full p-3 border rounded-xl text-xs font-medium focus:outline-none">
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="hideModal('login-modal')" class="px-3 py-2 text-xs text-gray-500 font-bold">إلغاء</button>
+                <button onclick="loginUser()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition">دخول</button>
             </div>
         </div>
     </div>
 
-    <!-- مودال إنشاء حساب -->
+    <!-- نافذة (مودال) إنشاء حساب جديد -->
     <div id="register-modal" class="fixed inset-0 bg-black/50 hidden flex justify-center items-center z-50 p-4">
-        <div class="bg-white p-6 rounded-2xl w-full max-w-sm space-y-4">
-            <h3 class="font-black text-base">حساب جديد</h3>
-            <input type="text" id="reg-name" placeholder="الاسم" class="w-full p-3 border rounded-xl text-xs">
-            <input type="email" id="reg-email" placeholder="البريد الإلكتروني" class="w-full p-3 border rounded-xl text-xs">
-            <input type="password" id="reg-password" placeholder="كلمة المرور" class="w-full p-3 border rounded-xl text-xs">
-            <select id="reg-role" class="w-full p-3 border rounded-xl text-xs font-bold bg-white">
+        <div class="bg-white p-6 rounded-2xl w-full max-w-sm space-y-4 shadow-xl">
+            <div class="flex justify-between items-center">
+                <h3 class="font-black text-base">حساب جديد</h3>
+                <button onclick="hideModal('register-modal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
+            </div>
+            <input type="text" id="reg-name" placeholder="الاسم / اسم المتجر" class="w-full p-3 border rounded-xl text-xs font-medium focus:outline-none">
+            <input type="email" id="reg-email" placeholder="البريد الإلكتروني" class="w-full p-3 border rounded-xl text-xs font-medium focus:outline-none">
+            <input type="password" id="reg-password" placeholder="كلمة المرور" class="w-full p-3 border rounded-xl text-xs font-medium focus:outline-none">
+            <select id="reg-role" class="w-full p-3 border rounded-xl text-xs font-bold bg-white focus:outline-none">
                 <option value="customer">عميل</option>
                 <option value="merchant">تاجر</option>
                 <option value="admin">أدمن</option>
             </select>
-            <div class="flex justify-end gap-2">
-                <button onclick="hideModal('register-modal')" class="px-3 py-2 text-xs text-gray-500">إلغاء</button>
-                <button onclick="registerUser()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold">تسجيل</button>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="hideModal('register-modal')" class="px-3 py-2 text-xs text-gray-500 font-bold">إلغاء</button>
+                <button onclick="registerUser()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition">تسجيل</button>
             </div>
         </div>
     </div>
 
+    <!-- كود الجافاسكريبت بالكامل بدون أي اختصار -->
     <script>
         const SUPABASE_URL = 'https://miqqwdxfqklkweqlvffg.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_gd_SrlvmZSTi-96gH7MzIg_4iE9CzTx';
@@ -113,15 +123,22 @@
             loadProducts();
         };
 
-        function showModal(id) { document.getElementById(id).classList.remove('hidden'); }
-        function hideModal(id) { document.getElementById(id).classList.add('hidden'); }
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
 
-        function showAlert(msg, type = 'success') {
+        function hideModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function showAlert(message, type = 'success') {
             const box = document.getElementById('alert-box');
-            box.innerText = msg;
+            box.innerText = message;
             box.className = `p-3 rounded-xl text-white text-center shadow font-bold text-xs ${type === 'success' ? 'bg-emerald-600' : 'bg-rose-600'}`;
             box.classList.remove('hidden');
-            setTimeout(() => box.classList.add('hidden'), 4000);
+            setTimeout(() => {
+                box.classList.add('hidden');
+            }, 4000);
         }
 
         async function registerUser() {
@@ -130,20 +147,38 @@
             const password = document.getElementById('reg-password').value;
             const role = document.getElementById('reg-role').value;
 
+            if (!name || !email || !password) {
+                showAlert('الرجاء ملء جميع الحقول المطلوبة', 'error');
+                return;
+            }
+
             const { error } = await supabase.from('users').insert([{ name, email, password, role }]);
-            if (error) showAlert('خطأ: ' + error.message, 'error');
-            else { showAlert('تم التسجيل بنجاح!'); hideModal('register-modal'); }
+            if (error) {
+                showAlert('خطأ أثناء التسجيل: ' + error.message, 'error');
+            } else {
+                showAlert('تم إنشاء الحساب بنجاح! يمكنك تسجيل الدخول الآن.');
+                hideModal('register-modal');
+            }
         }
 
         async function loginUser() {
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
 
+            if (!email || !password) {
+                showAlert('الرجاء إدخال البريد وكلمة المرور', 'error');
+                return;
+            }
+
             const { data, error } = await supabase.from('users').select('*').eq('email', email).eq('password', password).single();
-            if (error || !data) showAlert('بيانات الدخول غير صحيحة', 'error');
-            else {
+            
+            if (error || !data) {
+                showAlert('بيانات الدخول غير صحيحة أو الحساب غير موجود', 'error');
+            } else {
                 currentUser = data;
                 localStorage.setItem('marketplace_user', JSON.stringify(currentUser));
+                showAlert(`مرحباً بك يا ${currentUser.name}`);
+                hideModal('login-modal');
                 location.reload();
             }
         }
@@ -152,24 +187,34 @@
             if (!currentUser) return;
             const nav = document.getElementById('nav-auth');
             nav.innerHTML = `
-                <span class="text-xs font-bold">${currentUser.name}</span>
-                <button onclick="openDashboard()" class="bg-indigo-800 px-3 py-1.5 rounded-xl text-xs font-bold">لوحة التحكم</button>
-                <button onclick="localStorage.removeItem('marketplace_user'); location.reload();" class="bg-rose-500 px-3 py-1.5 rounded-xl text-xs font-bold">خروج</button>
+                <span class="text-xs font-bold text-indigo-100 hidden sm:inline">${currentUser.name}</span>
+                <button onclick="openDashboard()" class="bg-indigo-800 hover:bg-indigo-900 px-3 py-1.5 rounded-xl text-xs font-bold transition">لوحة التحكم</button>
+                <button onclick="logoutUser()" class="bg-rose-500 hover:bg-rose-600 px-3 py-1.5 rounded-xl text-xs font-bold transition">خروج</button>
             `;
+        }
+
+        function logoutUser() {
+            localStorage.removeItem('marketplace_user');
+            location.reload();
         }
 
         async function loadProducts() {
             const grid = document.getElementById('products-grid');
-            const { data } = await supabase.from('products').select('*');
-            if (!data || data.length === 0) {
-                grid.innerHTML = '<p class="text-gray-400 col-span-full text-center py-12 text-xs font-bold">لا توجد منتجات.</p>';
+            const { data, error } = await supabase.from('products').select('*');
+            
+            if (error || !data || data.length === 0) {
+                grid.innerHTML = '<p class="text-gray-400 col-span-full text-center py-12 text-xs font-bold">لا توجد منتجات متاحة حالياً.</p>';
                 return;
             }
+
             grid.innerHTML = data.map(p => `
-                <div class="bg-white p-3 rounded-2xl shadow-sm border">
-                    <img src="${p.image_url || 'https://via.placeholder.com/300'}" class="w-full h-36 object-cover rounded-xl mb-2">
-                    <h3 class="font-bold text-sm mb-1">${p.title}</h3>
-                    <p class="text-indigo-600 font-black">${p.price} جنيه</p>
+                <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
+                    <div>
+                        <img src="${p.image_url || 'https://via.placeholder.com/300'}" class="w-full h-36 object-cover rounded-xl mb-2 bg-gray-50" onerror="this.src='https://via.placeholder.com/300'">
+                        <span class="text-[9px] bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-md font-bold inline-block mb-1">${p.category || 'عام'}</span>
+                        <h3 class="font-bold text-sm text-gray-800 mb-1 line-clamp-1">${p.title}</h3>
+                        <p class="text-indigo-600 font-black text-base">${p.price} جنيه</p>
+                    </div>
                 </div>
             `).join('');
         }
@@ -181,22 +226,45 @@
             if (currentUser.role === 'merchant') {
                 document.getElementById('dash-title').innerText = 'لوحة تحكم التاجر';
                 document.getElementById('merchant-add-box').classList.remove('hidden');
-                document.getElementById('list-title').innerText = 'منتجاتك';
+                document.getElementById('list-title').innerText = 'منتجاتك المسجلة';
                 
-                const { data } = await supabase.from('products').select('*').eq('merchant_id', currentUser.id);
-                document.getElementById('dashboard-list').innerHTML = data?.map(p => `<div class="p-2 border rounded text-xs font-bold">${p.title} - ${p.price} جنيه</div>`).join('') || 'لا توجد منتجات';
+                const { data, error } = await supabase.from('products').select('*').eq('merchant_id', currentUser.id);
+                const listContainer = document.getElementById('dashboard-list');
+                
+                if (error || !data || data.length === 0) {
+                    listContainer.innerHTML = '<p class="text-gray-400 text-xs">لم تقم بإضافة أي منتجات بعد.</p>';
+                    return;
+                }
+
+                listContainer.innerHTML = data.map(p => `
+                    <div class="p-3 border rounded-xl bg-gray-50 flex justify-between items-center text-xs font-bold">
+                        <span>${p.title} - <span class="text-indigo-600">${p.price} جنيه</span></span>
+                        <span class="text-gray-500">${p.category || ''}</span>
+                    </div>
+                `).join('');
             
             } else if (currentUser.role === 'admin') {
                 document.getElementById('dash-title').innerText = 'لوحة تحكم الأدمن';
-                document.getElementById('list-title').innerText = 'كل المنتجات';
+                document.getElementById('merchant-add-box').classList.add('hidden');
+                document.getElementById('list-title').innerText = 'إدارة جميع منتجات المتجر';
                 
-                const { data } = await supabase.from('products').select('*');
-                document.getElementById('dashboard-list').innerHTML = data?.map(p => `
-                    <div class="p-2 border rounded flex justify-between items-center text-xs">
-                        <span>${p.title} (${p.price} ج)</span>
-                        <button onclick="deleteProduct('${p.id}')" class="bg-rose-500 text-white px-2 py-1 rounded">حذف</button>
+                const { data, error } = await supabase.from('products').select('*');
+                const listContainer = document.getElementById('dashboard-list');
+
+                if (error || !data || data.length === 0) {
+                    listContainer.innerHTML = '<p class="text-gray-400 text-xs">لا توجد منتجات في المتجر حالياً.</p>';
+                    return;
+                }
+
+                listContainer.innerHTML = data.map(p => `
+                    <div class="p-3 border rounded-xl bg-gray-50 flex justify-between items-center text-xs">
+                        <div>
+                            <span class="font-bold text-gray-800">${p.title}</span> 
+                            <span class="text-indigo-600 font-bold">(${p.price} جنيه)</span>
+                        </div>
+                        <button onclick="deleteProduct('${p.id}')" class="bg-rose-500 hover:bg-rose-600 text-white px-3 py-1.5 rounded-lg font-bold transition">حذف</button>
                     </div>
-                `).join('') || 'لا توجد منتجات';
+                `).join('');
             }
         }
 
@@ -206,15 +274,39 @@
             const category = document.getElementById('p-category').value;
             const image_url = document.getElementById('p-image').value;
 
-            await supabase.from('products').insert([{ title, price, category, image_url, merchant_id: currentUser.id }]);
-            showAlert('تم الإضافة بنجاح');
-            openDashboard();
+            if (!title || !price) {
+                showAlert('الرجاء كتابة اسم المنتج والسعر على الأقل', 'error');
+                return;
+            }
+
+            const { error } = await supabase.from('products').insert([{
+                title,
+                price: parseFloat(price),
+                category,
+                image_url,
+                merchant_id: currentUser.id
+            }]);
+
+            if (error) {
+                showAlert('حدث خطأ أثناء إضافة المنتج: ' + error.message, 'error');
+            } else {
+                showAlert('تم إضافة ونشر المنتج بنجاح!');
+                document.getElementById('p-title').value = '';
+                document.getElementById('p-price').value = '';
+                document.getElementById('p-category').value = '';
+                document.getElementById('p-image').value = '';
+                openDashboard();
+            }
         }
 
-        async function deleteProduct(id) {
-            await supabase.from('products').delete().eq('id', id);
-            showAlert('تم الحذف');
-            openDashboard();
+        async function deleteProduct(productId) {
+            const { error } = await supabase.from('products').delete().eq('id', productId);
+            if (error) {
+                showAlert('حدث خطأ أثناء الحذف', 'error');
+            } else {
+                showAlert('تم حذف المنتج بنجاح');
+                openDashboard();
+            }
         }
     </script>
 </body>
