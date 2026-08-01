@@ -62,11 +62,13 @@
                 <button onclick="addProduct()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-bold text-xs transition">نشر المنتج</button>
             </div>
 
-            <!-- قائمة العناصر داخل لوحة التحكم -->
+            <!-- قائمة العناصر داخل لوحة التحكم مع منع الخروج عبر overflow-x-auto -->
             <div class="space-y-3">
                 <h3 id="list-title" class="font-black text-sm text-gray-800">القائمة</h3>
-                <div id="dashboard-list" class="space-y-2">
-                    <p class="text-gray-400 text-xs">جاري التحميل...</p>
+                <div class="overflow-x-auto w-full">
+                    <div id="dashboard-list" class="space-y-2 min-w-[300px]">
+                        <p class="text-gray-400 text-xs">جاري التحميل...</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -110,7 +112,7 @@
         </div>
     </div>
 
-    <!-- كود الجافاسكريبت بالكامل بدون أي اختصار -->
+    <!-- كود الجافاسكريبت بالكامل -->
     <script>
         const SUPABASE_URL = 'https://miqqwdxfqklkweqlvffg.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_gd_SrlvmZSTi-96gH7MzIg_4iE9CzTx';
